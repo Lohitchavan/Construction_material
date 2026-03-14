@@ -13,6 +13,7 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN?.split(",").map((s) => s.trim()) || [
       "http://localhost:5173",
+      "https://construction-material.vercel.app",
     ],
     credentials: true,
   })
