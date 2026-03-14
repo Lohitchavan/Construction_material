@@ -9,6 +9,23 @@ const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 
+// Ensure CORS headers are returned consistently for browser clients
+app.use((req, res, next) => {
+  const allowedOrigin = process.env.CORS_ORIGIN || "*";
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN
