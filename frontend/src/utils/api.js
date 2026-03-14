@@ -14,6 +14,12 @@ let token = null;
 
 instance.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
+
+  // Ensure the client always hits the /api namespace, even if VITE_API_URL is missing it.
+  if (config.url && config.url.startsWith("/") && !config.url.startsWith("/api")) {
+    config.url = `/api${config.url}`;
+  }
+
   return config;
 });
 
