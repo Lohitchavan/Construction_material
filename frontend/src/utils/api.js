@@ -1,10 +1,22 @@
 import axios from "axios";
 
 const rawBase = import.meta.env.VITE_API_URL || "https://construction-material-g0zq.onrender.com/api";
-const normalizedBase = rawBase.replace(/\/+$/, "");
-const baseURL = normalizedBase.endsWith("/api")
-  ? normalizedBase
-  : `${normalizedBase}/api`;
+
+function resolveApiBase(base) {
+  const trimmed = String(base || "").trim();
+  if (!trimmed) return "";
+
+  try {
+    const url = new URL(trimmed);
+    return `${url.protocol}//${url.host}/api`;
+  } catch {
+    // If it's not a full URL, fall back to a safe normalized path.
+    const normalized = trimmed.replace(/\/+$|\/products(\/.*)?$/i, "");
+    return normalized.endsWith("/api") ? normalized : `${normalized}/api`;
+  }
+}
+
+const baseURL = resolveApiBase(rawBase);
 
 const instance = axios.create({
   baseURL,
